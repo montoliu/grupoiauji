@@ -8,10 +8,10 @@ from Games.TicTacToe.TicTacToeHeuristic import TicTacToeHeuristic
 
 # Given the game name, create the game, game_state, forward model and heuristic of this game
 def select_game(game_name):
-    game = None
-    game_state = None
-    forward_model = None
-    heuristic = None
+    gm = None
+    gs = None
+    fm = None
+    ht = None
 
     # if game_name == "Gwent":
     #     game = GwentGame()
@@ -25,17 +25,37 @@ def select_game(game_name):
     #     heuristic = ClashRoyaleHeuristic()
 
     if game_name == "TicTacToe":
-        game = TicTacToeGame()
-        game_state = TicTacToeGameState()
-        forward_model = TicTacToeForwardModel()
-        heuristic = TicTacToeHeuristic()
-    return game, game_state, forward_model, heuristic
+        gm = TicTacToeGame()
+        gs = TicTacToeGameState()
+        fm = TicTacToeForwardModel()
+        ht = TicTacToeHeuristic()
+    return gm, gs, fm, ht
 
 
+def player_turn(gs, fm, ht, pl, vbose):
+    if vbose:
+        print(gs)
+
+    list_actions = gs.get_list_actions()
+    action = pl.think(list_actions, budget)
+
+    if vbose:
+        print("Player " + str(gs.turn) + " selects [" + str(action) + "]")
+
+    reward = fm.play(game_state, action, ht)
+
+    if vbose:
+        print("Reward: " + str(reward))
+
+
+# ---------------------------------------------------------------------------
+# MAIN
+# ---------------------------------------------------------------------------
 if __name__ == '__main__':
-    # TODO make this two variables arg of the main program
+    # TODO make these variables arg of the main program
     budget = 1000                      # 1 second
     game_name = "TicTacToe"            # Gwent, ClashRoyale, TicTacToe
+    verbose = 1                        # print messages
 
     game, game_state, forward_model, heuristic = select_game(game_name)
 
@@ -46,27 +66,19 @@ if __name__ == '__main__':
     game.reset(game_state, player_id_as_first)
 
     while not game_state.is_terminal():
-        print("Game State: ")
-        print(game_state)
-        list_actions = game_state.get_list_actions()
         if game_state.turn == 1:
-            action = player1.think(list_actions, budget)
+            player_turn(game_state, forward_model, heuristic, player1, verbose)
         else:
-            action = player2.think(list_actions, budget)
-        print("Player " + str(game_state.turn) + " selects " + str(action))
-        forward_model.play(game_state, action, heuristic)
+            player_turn(game_state, forward_model, heuristic, player2, verbose)
 
         if game_state.is_terminal():
             break
 
-        print(game_state)
-        list_actions = game_state.get_list_actions()
         if game_state.turn == 1:
-            action = player1.think(list_actions, budget)
+            player_turn(game_state, forward_model, heuristic, player1, verbose)
         else:
-            action = player2.think(list_actions, budget)
-        print("Player " + str(game_state.turn) + " selects " + str(action))
-        forward_model.play(game_state, action, heuristic)
+            player_turn(game_state, forward_model, heuristic, player2, verbose)
 
-    print(game_state)
-    print("The winner is the player: " + str(game_state.winner))
+    if verbose:
+        print(game_state)
+        print("The winner is the player: " + str(game_state.winner))

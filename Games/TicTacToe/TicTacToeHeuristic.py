@@ -1,5 +1,6 @@
 from Core.Heuristic import Heuristic
 
+
 # TODO create a unit test
 class TicTacToeHeuristic (Heuristic):
     def get_score(self, game_state, player_id):

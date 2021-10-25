@@ -17,28 +17,10 @@ class TicTacToeGameState(GameState):
         return l_actions
 
     def is_terminal(self):
-        # winner
-        for player_id in range(1, 3):  # 1 and 2
-            if (self.board[0][0] == player_id and self.board[0][1] == player_id and self.board[0][2] == player_id) \
-                    or (
-                    self.board[1][0] == player_id and self.board[1][1] == player_id and self.board[1][2] == player_id) \
-                    or (
-                    self.board[2][0] == player_id and self.board[2][1] == player_id and self.board[2][2] == player_id) \
-                    or (
-                    self.board[0][0] == player_id and self.board[1][0] == player_id and self.board[2][0] == player_id) \
-                    or (
-                    self.board[0][1] == player_id and self.board[1][1] == player_id and self.board[2][1] == player_id) \
-                    or (
-                    self.board[0][2] == player_id and self.board[1][2] == player_id and self.board[2][2] == player_id) \
-                    or (
-                    self.board[0][0] == player_id and self.board[1][1] == player_id and self.board[2][2] == player_id) \
-                    or (
-                    self.board[0][2] == player_id and self.board[1][1] == player_id and self.board[2][0] == player_id):
-                self.winner = player_id
-                return True
-
+        if self.winner != 0:
+            return True
         # empty
-        if self.board[0][0] != 0 and self.board[0][1] != 0 and self.board[0][2] != 0 \
+        elif self.board[0][0] != 0 and self.board[0][1] != 0 and self.board[0][2] != 0 \
                 and self.board[1][0] != 0 and self.board[1][1] != 0 and self.board[1][2] != 0 \
                 and self.board[2][0] != 0 and self.board[2][1] != 0 and self.board[2][2] != 0:
             return True
