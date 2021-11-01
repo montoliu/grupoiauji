@@ -1,6 +1,6 @@
 # Abstract class for game states
 class GameState:
-    def get_list_actions(self):
+    def get_observation(self):
         pass
 
     def is_terminal(self):

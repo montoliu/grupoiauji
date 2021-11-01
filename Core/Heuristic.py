@@ -1,4 +1,4 @@
 # Abstract class for heuristic functions
 class Heuristic:
-    def get_score(self, game_state, player_id):
+    def get_score(self, observation, player_id):
         pass
