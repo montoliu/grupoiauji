@@ -1,15 +1,13 @@
-import random
-
 from Core.Player import Player
 
 
 # ---------------------------------------------------------------------------
-# Randomly selects one action from the list of possible actions
+# Returns always the first action from the list of possible actions
 # ---------------------------------------------------------------------------
-class RandomPlayer(Player):
+class AlwaysFirstPlayer(Player):
     def think(self, observation, budget):
         list_actions = observation.get_list_actions()
-        return random.choice(list_actions)
+        return list_actions[0]
 
     def __str__(self):
-        return "RandomPlayer"
+        return "AlwaysFirstPlayer"

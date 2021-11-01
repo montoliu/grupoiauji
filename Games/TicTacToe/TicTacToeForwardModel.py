@@ -1,8 +1,11 @@
 from Core.ForwardModel import ForwardModel
 
 
+# ---------------------------------------------------------------------------
+# TicTacTow rules
+# ---------------------------------------------------------------------------
 class TicTacToeForwardModel(ForwardModel):
-    # Update the board, change the turn, check winner and return reward
+    # Update the board, change the turn, check winner and return reward according to heuristic
     def play(self, game_state, action, heuristic):
         player_id = game_state.turn
         game_state.board[action.row][action.column] = player_id

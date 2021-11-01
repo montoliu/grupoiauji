@@ -1,13 +1,13 @@
-import random
+from Players.AlwaysFirstPlayer import AlwaysFirstPlayer
 from Players.OSLAPlayer import OSLAPlayer
 from Players.RandomPlayer import RandomPlayer
-from functions import play_one_match, select_game
+from main_functions import play_one_match, select_game
 
 # ---------------------------------------------------------------------------
-# MAIN
+# MAIN: plays several games between two players
+# Half of the matches the player id 1 plays as first, half as second
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
-    # TODO make these variables arg of the main program
     budget = 1000                      # 1 second
     game_name = "TicTacToe"            # Gwent, ClashRoyale, TicTacToe
     verbose = 0                        # print messages OFF
@@ -15,6 +15,7 @@ if __name__ == '__main__':
 
     game, game_state, forward_model, heuristic = select_game(game_name)
 
+    # Players
     player1 = RandomPlayer()
     player2 = OSLAPlayer()
 
@@ -23,8 +24,8 @@ if __name__ == '__main__':
     ties = 0
 
     n_matches = int(n_matches / 2)
-    # half player 1 as first, half, player 1 as second
-    for i in range(n_matches):
+    for n in range(n_matches):
+        # player 1 as first
         game.reset(game_state, 1)
         play_one_match(game_state, forward_model, heuristic, player1, player2, budget, verbose)
         if game_state.winner == 1:
@@ -34,6 +35,7 @@ if __name__ == '__main__':
         else:
             ties += 1
 
+        # player 2 as first
         game.reset(game_state, 2)
         play_one_match(game_state, forward_model, heuristic, player1, player2, budget, verbose)
         if game_state.winner == 1:

@@ -5,9 +5,11 @@ from Games.TicTacToe.TicTacToeForwardModel import TicTacToeForwardModel
 from Games.TicTacToe.TicTacToeHeuristic import TicTacToeHeuristic
 
 
-# For each action calculates how good or bad is to play such us action
-# Return the action with the best score, according to the heuristic
+# ---------------------------------------------------------------------------
+# For each action, calculates how good or bad is to play such us action
+# Returns the action with the best score, according to the heuristic
 # If there are more than one with the best score, returns one of best randomly choosen
+# ---------------------------------------------------------------------------
 class OSLAPlayer(Player):
     def think(self, observation, budget):
         list_actions = observation.get_list_actions()
@@ -17,7 +19,7 @@ class OSLAPlayer(Player):
         ht = TicTacToeHeuristic()
 
         for action in list_actions:
-            obs = observation.clone()
+            obs = observation.clone()         # clone the observation to avoid changes at original observation
             score = fm.play(obs, action, ht)
 
             if score > best_score:

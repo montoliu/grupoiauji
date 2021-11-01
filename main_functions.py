@@ -6,7 +6,9 @@ from Games.TicTacToe.TicTacToeForwardModel import TicTacToeForwardModel
 from Games.TicTacToe.TicTacToeHeuristic import TicTacToeHeuristic
 
 
+# ---------------------------------------------------------------------------
 # Given the game name, create the game, game_state, forward model and heuristic of this game
+# ---------------------------------------------------------------------------
 def select_game(game_name):
     gm = None
     gs = None
@@ -32,6 +34,9 @@ def select_game(game_name):
     return gm, gs, fm, ht
 
 
+# ---------------------------------------------------------------------------
+# Performs a player turn
+# ---------------------------------------------------------------------------
 def player_turn(gs, fm, ht, pl, budget, vbose):
     if vbose:
         print(gs)
@@ -48,6 +53,9 @@ def player_turn(gs, fm, ht, pl, budget, vbose):
         print("Reward: " + str(reward))
 
 
+# ---------------------------------------------------------------------------
+# PLays just one match
+# ---------------------------------------------------------------------------
 def play_one_match(gs, fm, ht, p1, p2, budget, vbose):
     while not gs.is_terminal():
         if gs.turn == 1:
