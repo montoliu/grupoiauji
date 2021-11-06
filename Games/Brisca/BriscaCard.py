@@ -3,6 +3,12 @@ class BriscaCard:
         self.card_type = card_type      # "O", "E", "C", "B"
         self.card_number = card_number  # 1 to 7 and 10 to 12 (no 8 and 9)
 
+    def get_type(self):
+        return self.card_type
+
+    def get_number(self):
+        return self.card_number
+
     def get_points(self):
         if self.card_number == 1:
             return 11
@@ -15,3 +21,10 @@ class BriscaCard:
         if self.card_number == 10:
             return 2
         return 0
+
+    def clone(self):
+        new_card = BriscaCard(self.card_type, self.card_number)
+        return new_card
+
+    def __str__(self):
+        return self.card_type + str(self.card_number)
