@@ -1,6 +1,5 @@
 from Core.Observation import Observation
 from Games.Brisca.BriscaAction import BriscaAction
-from Games.Brisca.BriscaChangeAction import BriscaChangeAction
 
 
 class BriscaObservation(Observation):
@@ -17,19 +16,6 @@ class BriscaObservation(Observation):
         l_actions = []
         for card in self.hands[self.turn]:
             l_actions.append(BriscaAction(card))
-
-        # if the player has the 7th of the same type than the trump card
-        # or the player has the 2th of the same type than the trump card and this the 7th
-        for card in self.hands[self.turn]:
-            if card.get_number() == 7 and card.get_type() == self.trump_card.get_type():
-                for card_to_play in self.hands[self.turn]:
-                    l_actions.append(BriscaChangeAction(card, card_to_play))
-                break
-            elif card.get_number() == 2 and \
-                    card.get_type() == self.trump_card.get_type() and self.trump_card.get_number == 2:
-                for card_to_play in self.hands[self.turn]:
-                    l_actions.append(BriscaChangeAction(card, card_to_play))
-                break
 
         return l_actions
 

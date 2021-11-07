@@ -29,7 +29,7 @@ class BriscaGame(Game):
         # who play as first
         game_state.turn = player_id_as_first
 
-        game_state.played_cards.clear()
+        game_state.playing_cards.clear()
 
     def create_main_deck(self, deck):
         l_types = ["O", "E", "C", "B"]

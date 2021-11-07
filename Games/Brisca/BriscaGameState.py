@@ -10,7 +10,7 @@ class BriscaGameState(GameState):
         self.n_players = 4
         self.turn = 0
         self.trump_card = None
-        self.played_cards = BriscaCardCollection()
+        self.playing_cards = BriscaCardCollection()
         self.main_deck = BriscaCardCollection()
         self.hands = []
         self.won_cards = []
@@ -47,7 +47,7 @@ class BriscaGameState(GameState):
                     randomized_hands[p].add_card(card)
 
         obs = BriscaObservation(randomized_main_deck, randomized_hands, self.trump_card,
-                                self.won_cards, self.turn, self.n_players, self.played_cards)
+                                self.won_cards, self.turn, self.n_players, self.playing_cards)
         return obs
 
     # empty deck, empty hands
@@ -65,7 +65,7 @@ class BriscaGameState(GameState):
         s += "HANDS: \n"
         for hand in self.hands:
             s += "   " + str(hand) + "\n"
-        s += "PLAYED CARDS: " + str(self.played_cards) + "\n"
+        s += "PLAYED CARDS: " + str(self.playing_cards) + "\n"
         s += "WON CARDS: \n"
         for cards in self.won_cards:
             s += "   " + str(cards) + "\n"

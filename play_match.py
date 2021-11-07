@@ -1,4 +1,7 @@
 import random
+
+from Players.AlwaysFirstPlayer import AlwaysFirstPlayer
+from Players.HumanPlayer import HumanPlayer
 from main_functions import play_one_match, select_game
 from Players.OSLAPlayer import OSLAPlayer
 from Players.RandomPlayer import RandomPlayer
@@ -10,20 +13,21 @@ from Players.RandomPlayer import RandomPlayer
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     budget = 1000                      # 1 second
-    game_name = "TicTacToe"            # Gwent, ClashRoyale, TicTacToe
+    game_name = "TicTacToe"            # Gwent, ClashRoyale, TicTacToe, Brisca
     verbose = 1                        # print messages
 
     game, game_state, forward_model, heuristic = select_game(game_name)
 
-    player1 = RandomPlayer()
-    player2 = OSLAPlayer()
+    # RandomPlayer, OSLAPlayer, HumanPlayer
+    l_players = [AlwaysFirstPlayer(), HumanPlayer()]
 
     # who starts? Randomly selected
-    player_id_as_first = random.choice([1, 2])   # 1 or 2
+    player_id_as_first = random.choice(range(game_state.n_players))
     game.reset(game_state, player_id_as_first)
 
-    play_one_match(game_state, forward_model, heuristic, player1, player2, budget, verbose)
+    play_one_match(game_state, forward_model, heuristic, l_players, budget, verbose)
 
     if verbose:
+        print("---------------------------------------- ")
+        print("The winner is the player: " + str(l_players[game_state.winner]))
         print(game_state)
-        print("The winner is the player: " + str(game_state.winner))

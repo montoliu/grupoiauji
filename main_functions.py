@@ -1,5 +1,7 @@
-from Players.OSLAPlayer import OSLAPlayer
-from Players.RandomPlayer import RandomPlayer
+from Games.Brisca.BriscaForwardModel import BriscaForwardModel
+from Games.Brisca.BriscaGame import BriscaGame
+from Games.Brisca.BriscaGameState import BriscaGameState
+from Games.Brisca.BriscaHeuristic import BriscaHeuristic
 from Games.TicTacToe.TicTacToeGame import TicTacToeGame
 from Games.TicTacToe.TicTacToeGameState import TicTacToeGameState
 from Games.TicTacToe.TicTacToeForwardModel import TicTacToeForwardModel
@@ -31,6 +33,11 @@ def select_game(game_name):
         gs = TicTacToeGameState()
         fm = TicTacToeForwardModel()
         ht = TicTacToeHeuristic()
+    elif game_name == "Brisca":
+        gm = BriscaGame()
+        gs = BriscaGameState()
+        fm = BriscaForwardModel()
+        ht = BriscaHeuristic()
     return gm, gs, fm, ht
 
 
@@ -39,6 +46,9 @@ def select_game(game_name):
 # ---------------------------------------------------------------------------
 def player_turn(gs, fm, ht, pl, budget, vbose):
     if vbose:
+        print("---------------------------------------- ")
+        print("Player " + str(gs.turn) + " [" + str(pl) + "] turn:")
+        print("---------------------------------------- ")
         print(gs)
 
     observation = gs.get_observation()
@@ -54,19 +64,11 @@ def player_turn(gs, fm, ht, pl, budget, vbose):
 
 
 # ---------------------------------------------------------------------------
-# PLays just one match
+# Plays just one match
 # ---------------------------------------------------------------------------
-def play_one_match(gs, fm, ht, p1, p2, budget, vbose):
+def play_one_match(gs, fm, ht, l_players, budget, vbose):
     while not gs.is_terminal():
-        if gs.turn == 1:
-            player_turn(gs, fm, ht, p1, budget, vbose)
-        else:
-            player_turn(gs, fm, ht, p2, budget, vbose)
-
-        if gs.is_terminal():
-            break
-
-        if gs.turn == 1:
-            player_turn(gs, fm, ht, p1, budget, vbose)
-        else:
-            player_turn(gs, fm, ht, p2, budget, vbose)
+        for i in range(gs.n_players):
+            player_turn(gs, fm, ht, l_players[gs.turn], budget, vbose)
+            if gs.is_terminal():
+                break

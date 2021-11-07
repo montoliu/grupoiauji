@@ -9,7 +9,7 @@ class BriscaCard:
     def get_number(self):
         return self.card_number
 
-    def get_points(self):
+    def get_value(self):
         if self.card_number == 1:
             return 11
         if self.card_number == 3:
