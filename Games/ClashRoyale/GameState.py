@@ -23,8 +23,10 @@ class ClashRoyaleGameState(GameState):
         self.board = []
 
         for i in range(board_width):
+            fila = []
             for j in range(board_height):
-                self.board[i][j] = 0
+                fila.append(0)
+            self.board.append(fila)
 
         self.winner = -1  # -1 no hay ganador, 1 el p1 ha ganado, 2 el p2 ha ganado
 
