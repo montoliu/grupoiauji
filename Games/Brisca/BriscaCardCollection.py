@@ -49,6 +49,10 @@ class BriscaCardCollection:
             return False
         return True
 
+    def remove(self, card):
+        # TODO check it!
+        self.l_cards.remove(card)
+
     def __str__(self):
         s = ""
         for card in self.l_cards:

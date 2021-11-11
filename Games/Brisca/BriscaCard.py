@@ -28,3 +28,6 @@ class BriscaCard:
 
     def __str__(self):
         return self.card_type + str(self.card_number)
+
+    def __eq__(self, other):
+        return self.card_type == other.card_type and self.card_number == other.card_number

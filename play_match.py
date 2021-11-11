@@ -13,13 +13,15 @@ from Players.RandomPlayer import RandomPlayer
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     budget = 1000                      # 1 second
-    game_name = "TicTacToe"            # Gwent, ClashRoyale, TicTacToe, Brisca
+    game_name = "Brisca"            # Gwent, ClashRoyale, TicTacToe, Brisca
     verbose = 1                        # print messages
+    seed = 1
+    random.seed(seed)
 
     game, game_state, forward_model, heuristic = select_game(game_name)
 
     # RandomPlayer, OSLAPlayer, HumanPlayer
-    l_players = [AlwaysFirstPlayer(), HumanPlayer()]
+    l_players = [AlwaysFirstPlayer(), AlwaysFirstPlayer(), AlwaysFirstPlayer(), AlwaysFirstPlayer()]
 
     # who starts? Randomly selected
     player_id_as_first = random.choice(range(game_state.n_players))

@@ -7,3 +7,6 @@ class BriscaAction(Action):
 
     def get_card(self):
         return self.card
+
+    def __str__(self):
+        return str(self.card)

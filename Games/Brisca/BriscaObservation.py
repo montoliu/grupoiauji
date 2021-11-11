@@ -14,7 +14,8 @@ class BriscaObservation(Observation):
 
     def get_list_actions(self):
         l_actions = []
-        for card in self.hands[self.turn]:
+        cards = self.hands[self.turn].get_cards()
+        for card in cards:
             l_actions.append(BriscaAction(card))
 
         return l_actions

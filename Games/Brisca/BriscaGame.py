@@ -8,6 +8,7 @@ class BriscaGame(Game):
         self.create_main_deck(game_state.main_deck)
         game_state.n_players = 4
 
+        # create empty hands
         for p in range(game_state.n_players):
             hand = BriscaCardCollection()
             game_state.hands.append(hand)
@@ -29,6 +30,7 @@ class BriscaGame(Game):
         # who play as first
         game_state.turn = player_id_as_first
 
+        # empty playing cards
         game_state.playing_cards.clear()
 
     def create_main_deck(self, deck):
