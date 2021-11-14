@@ -1,9 +1,11 @@
 import math
 from Core.ForwardModel import ForwardModel
+from Games.Brisca.BriscaCommon import is_better_card
 
 
 class BriscaForwardModel(ForwardModel):
     def play(self, gs, action, ht):
+        actual_player = gs.turn
         card = action.get_card()
 
         # Remove card from player hand
@@ -27,10 +29,8 @@ class BriscaForwardModel(ForwardModel):
         else:
             gs.turn = self.next_turn(gs.turn)
 
-
-
         # return reward
-        return ht.get_score(gs, gs.turn)
+        return ht.get_score(gs, actual_player)  # TODO played cards esta vacio cuando juega el cuarto
 
     def next_turn(self, actual_turn):
         if actual_turn == 0:
@@ -56,35 +56,11 @@ class BriscaForwardModel(ForwardModel):
 
             card = playing_cards.get_card(c)
 
-            if self.is_better_card(card, best_card, trump_card, playing_cards.get_card(0)):
+            if is_better_card(card, best_card, trump_card, playing_cards.get_card(0)):
                 best_card = card
                 winning_player = p
 
         return winning_player
-
-    def is_better_card(self, actual_card, prev_card, trump_card, round_card):
-        # both cards are trump type
-        if actual_card.get_type() == trump_card.get_type() and prev_card.get_type() == trump_card.get_type():
-            if actual_card.get_value() > prev_card.get_value():
-                return True
-            else:
-                return False
-        elif actual_card.get_type() == trump_card.get_type():
-            return True
-        elif prev_card.get_type() == trump_card.get_type():
-            return False
-        elif actual_card.get_type() == round_card.get_type() and prev_card.get_type() == round_card.get_type():
-            if actual_card.get_value() > prev_card.get_value():
-                return True
-            else:
-                return False
-        elif actual_card.get_type() == round_card.get_type():
-            return True
-        elif prev_card.get_type() == round_card.get_type():
-            return False
-        if actual_card.get_value() > prev_card.get_value():
-            return True
-        return False
 
     def check_winner(self, game_state):
         if not game_state.is_terminal():
