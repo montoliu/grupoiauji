@@ -1,3 +1,6 @@
+import random
+
+import func_timeout
 from Games.Brisca.BriscaForwardModel import BriscaForwardModel
 from Games.Brisca.BriscaGame import BriscaGame
 from Games.Brisca.BriscaGameState import BriscaGameState
@@ -44,31 +47,52 @@ def select_game(game_name):
 # ---------------------------------------------------------------------------
 # Performs a player turn
 # ---------------------------------------------------------------------------
-def player_turn(gs, fm, ht, pl, budget, vbose):
-    if vbose:
+def player_turn(gs, fm, ht, pl, budget, verbose, controlling_time):
+    if verbose:
+        print("")
         print("---------------------------------------- ")
-        print("Player " + str(gs.turn) + " [" + str(pl) + "] turn:")
+        print("Player " + str(gs.turn) + " [" + str(pl) + "] turn")
         print("---------------------------------------- ")
-        print(gs)
+        print(str(gs))
 
     observation = gs.get_observation()
-    action = pl.think(observation, budget)
+    if controlling_time:
+        try:
+            action = func_timeout.func_timeout(budget, player_thinking, args=[pl, observation, budget])
+        except func_timeout.FunctionTimedOut:
+            if verbose:
+                print("Ups, too many time thinking. A random action is selected instead !!!")
+            action = get_random_action(observation)
+    else:
+        action = player_thinking(pl, observation, budget)
 
-    if vbose:
+    if verbose:
         print("Player " + str(gs.turn) + " selects [" + str(action) + "]")
 
     reward = fm.play(gs, action, ht)
 
-    if vbose:
+    if verbose:
         print("Reward: " + str(reward))
+
+
+def player_thinking(pl, observation, budget):
+    return pl.think(observation, budget)
+
+
+def get_random_action(observation):
+
+    l_actions = observation.get_list_actions()
+    return random.choice(l_actions)
 
 
 # ---------------------------------------------------------------------------
 # Plays just one match
 # ---------------------------------------------------------------------------
-def play_one_match(gs, fm, ht, l_players, budget, vbose):
+def play_one_match(gs, fm, ht, l_players, budget, verbose, controlling_time):
     while not gs.is_terminal():
         for i in range(gs.n_players):
-            player_turn(gs, fm, ht, l_players[gs.turn], budget, vbose)
+            player_turn(gs, fm, ht, l_players[gs.turn], budget, verbose, controlling_time)
             if gs.is_terminal():
                 break
+
+    fm.check_winner(gs)

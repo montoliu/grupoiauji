@@ -14,6 +14,7 @@ class BriscaGameState(GameState):
         self.main_deck = BriscaCardCollection()
         self.hands = []
         self.won_cards = []
+        self.winner = -1
 
     # get the observable view for actual player
     # non observable parts are randomized
@@ -31,12 +32,11 @@ class BriscaGameState(GameState):
         randomized_main_deck.add_cards(l_all_cards)
         randomized_hands = []
 
-        n = self.hands[0].len()  # number of card on hand
-
         for p in range(self.n_players):
             randomized_hands.append(BriscaCardCollection())
+            n = self.hands[p].len()  # number of card on hand
             if p != self.turn:
-                # draw n cards from randomized main_deck
+                # draw n cards from randomized main_deck. n is the same number of card that the player has on hand
                 for i in range(n):
                     card = randomized_main_deck.draw()
                     randomized_hands[p].add_card(card)
@@ -47,16 +47,16 @@ class BriscaGameState(GameState):
                     randomized_hands[p].add_card(card)
 
         obs = BriscaObservation(randomized_main_deck, randomized_hands, self.trump_card,
-                                self.won_cards, self.turn, self.n_players, self.playing_cards)
+                                self.won_cards, self.turn, self.n_players, self.playing_cards, self.winner)
         return obs
 
     # empty deck, empty hands
     def is_terminal(self):
         return self.main_deck.empty() \
-               and self.hands[0].epmty() \
-               and self.hands[1].epmty() \
-               and self.hands[2].epmty() \
-               and self.hands[3]
+               and self.hands[0].empty() \
+               and self.hands[1].empty() \
+               and self.hands[2].empty() \
+               and self.hands[3].empty()
 
     def __str__(self):
         s = "DECK:  " + str(self.main_deck) + "\n"

@@ -3,7 +3,6 @@ from Games.Brisca.BriscaCommon import is_better_card
 
 
 class BriscaHeuristic(Heuristic):
-
     # return the points that the player is going to win in the acual round
     def get_score(self, observation, player_id):
         if observation.playing_cards.len() == 1:

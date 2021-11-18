@@ -20,16 +20,16 @@ def actualize_points(l_pts, winner, ith, jth):
 # When there is a Tie, both players get 0.5 points
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
-    budget = 1000                      # 1 second
-    game_name = "TicTacToe"            # Gwent, ClashRoyale, TicTacToe
-    verbose = 0                        # print messages OFF
-    n_matches = 1000
+    budget = 2                      # In second
+    game_name = "Brisca"         # Gwent, ClashRoyale, TicTacToe
+    verbose = False                 # print messages OFF
+    n_matches = 100
+    controlling_time = False
 
     game, game_state, forward_model, heuristic = select_game(game_name)
 
     # List of players of the league
-    # AlwaysFirstPlayer
-    l_players = [AlwaysFirstPlayer(), RandomPlayer(), OSLAPlayer()]
+    l_players = [AlwaysFirstPlayer(), RandomPlayer()]
 
     l_points = [0.0 for i in range(len(l_players))]  # 0.0 points for each player
     n_matches = int(n_matches / 2)
@@ -38,16 +38,19 @@ if __name__ == '__main__':
         p1 = l_players[i]
         for j in range(i+1, len(l_players)):
             p2 = l_players[j]
-            players = [p1, p2]
+            if game_name == "Brisca":
+                players = [p1, p2, p1, p2]
+            else:
+                players = [p1, p2]
             for n in range(n_matches):
                 # player i as first
                 game.reset(game_state, 0)
-                play_one_match(game_state, forward_model, heuristic, players, budget, verbose)
+                play_one_match(game_state, forward_model, heuristic, players, budget, verbose, controlling_time)
                 actualize_points(l_points, game_state.winner, i, j)
 
                 # player j as first
                 game.reset(game_state, 1)
-                play_one_match(game_state, forward_model, heuristic, players, budget, verbose)
+                play_one_match(game_state, forward_model, heuristic, players, budget, verbose,controlling_time)
                 actualize_points(l_points, game_state.winner, i, j)
 
     for i in range(len(l_players)):

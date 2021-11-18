@@ -1,11 +1,12 @@
 import math
 from Core.ForwardModel import ForwardModel
-from Games.Brisca.BriscaCommon import is_better_card
+from Games.Brisca.BriscaCommon import is_better_card, calculate_points
 
 
 class BriscaForwardModel(ForwardModel):
     def play(self, gs, action, ht):
         actual_player = gs.turn
+
         card = action.get_card()
 
         # Remove card from player hand
@@ -14,23 +15,29 @@ class BriscaForwardModel(ForwardModel):
         # add to playing cards
         gs.playing_cards.add_card(card)
 
+        # Estimate the reward
+        reward = ht.get_score(gs, actual_player)
+
         # if it is the fouth, check who is the winner of this play and move cards to won set
         if gs.playing_cards.len() == 4:
-            p = self.get_round_winner(gs.playing_cards, gs.trump_card, gs.turn)
-            gs.won_cards[p].add_cards(gs.playing_cards.get_cards())
+            winner = self.get_round_winner(gs.playing_cards, gs.trump_card, gs.turn)
+            gs.won_cards[winner].add_cards(gs.playing_cards.get_cards())
             gs.playing_cards.clear()
-            gs.turn = p
+            gs.turn = winner
 
-            # draw new cards
+            # draw new cards starting by the winner
             if not gs.main_deck.empty():
+                player_to_recieve_a_new_card = winner
                 for i in range(gs.n_players):
                     new_card = gs.main_deck.draw()
-                    gs.hands[i].add_card(new_card)
+                    gs.hands[player_to_recieve_a_new_card].add_card(new_card)
+                    player_to_recieve_a_new_card += 1
+                    if player_to_recieve_a_new_card == gs.n_players:
+                        player_to_recieve_a_new_card = 0
         else:
             gs.turn = self.next_turn(gs.turn)
 
-        # return reward
-        return ht.get_score(gs, actual_player)  # TODO played cards esta vacio cuando juega el cuarto
+        return reward
 
     def next_turn(self, actual_turn):
         if actual_turn == 0:
@@ -62,25 +69,18 @@ class BriscaForwardModel(ForwardModel):
 
         return winning_player
 
+    # we assume 4 players
     def check_winner(self, game_state):
         if not game_state.is_terminal():
-            return 0                   # no winner yet
+            return -1                   # no winner yet
 
         # the winner is the player with more points
-        l_points = [0 for i in range(4)]
+        p0 = calculate_points(game_state.won_cards[0].get_cards()) + calculate_points(game_state.won_cards[2].get_cards())
+        p1 = calculate_points(game_state.won_cards[1].get_cards()) + calculate_points(game_state.won_cards[3].get_cards())
 
-        best_points = -math.inf
-        best_player = None
-        for player in range(game_state.n_players):
-            l_points[player] = self.calculate_points(game_state.l_won_cards[player])
-            if l_points[player] > best_points:
-                best_player = player
-                best_points = l_points[player]
+        if p0 > p1:
+            game_state.winner = 0
+        else:
+            game_state.winner = 1
 
-        return best_player + 1
 
-    def calculate_points(self, l_cards):
-        points = 0
-        for card in l_cards:
-            points += card.get_points()
-        return points

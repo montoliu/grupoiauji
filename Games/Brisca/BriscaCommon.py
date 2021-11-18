@@ -22,3 +22,10 @@ def is_better_card(actual_card, prev_card, trump_card, round_card):
     if actual_card.get_value() > prev_card.get_value():
         return True
     return False
+
+
+def calculate_points(l_cards):
+    points = 0
+    for card in l_cards:
+        points += card.get_value()
+    return points
