@@ -1,5 +1,4 @@
 import random
-
 import func_timeout
 from Games.Brisca.BriscaForwardModel import BriscaForwardModel
 from Games.Brisca.BriscaGame import BriscaGame
@@ -9,6 +8,19 @@ from Games.TicTacToe.TicTacToeGame import TicTacToeGame
 from Games.TicTacToe.TicTacToeGameState import TicTacToeGameState
 from Games.TicTacToe.TicTacToeForwardModel import TicTacToeForwardModel
 from Games.TicTacToe.TicTacToeHeuristic import TicTacToeHeuristic
+
+
+# ---------------------------------------------------------------------------
+# Plays just one match
+# ---------------------------------------------------------------------------
+def play_one_match(gs, fm, ht, l_players, budget, verbose, controlling_time):
+    while not gs.is_terminal():
+        for i in range(gs.n_players):
+            player_turn(gs, fm, ht, l_players[gs.turn], budget, verbose, controlling_time)
+            if gs.is_terminal():
+                break
+
+    fm.check_winner(gs)
 
 
 # ---------------------------------------------------------------------------
@@ -55,7 +67,11 @@ def player_turn(gs, fm, ht, pl, budget, verbose, controlling_time):
         print("---------------------------------------- ")
         print(str(gs))
 
-    observation = gs.get_observation()
+    observation = gs.get_observation()    # Observable part of the GameState
+
+    # When controlling_time is True, the player has budget seconds to thinks.
+    # If it last more than this time, a random action is played instead.
+    # It is responsability of the Player to internally control the processinf time.
     if controlling_time:
         try:
             action = func_timeout.func_timeout(budget, player_thinking, args=[pl, observation, budget])
@@ -74,25 +90,20 @@ def player_turn(gs, fm, ht, pl, budget, verbose, controlling_time):
     if verbose:
         print("Reward: " + str(reward))
 
-
+# ---------------------------------------------------------------------------
+# The player thinkg.
+# Returns the action to be played
+# ---------------------------------------------------------------------------
 def player_thinking(pl, observation, budget):
     return pl.think(observation, budget)
 
 
+# ---------------------------------------------------------------------------
+# Returns a random action
+# ---------------------------------------------------------------------------
 def get_random_action(observation):
-
     l_actions = observation.get_list_actions()
     return random.choice(l_actions)
 
 
-# ---------------------------------------------------------------------------
-# Plays just one match
-# ---------------------------------------------------------------------------
-def play_one_match(gs, fm, ht, l_players, budget, verbose, controlling_time):
-    while not gs.is_terminal():
-        for i in range(gs.n_players):
-            player_turn(gs, fm, ht, l_players[gs.turn], budget, verbose, controlling_time)
-            if gs.is_terminal():
-                break
 
-    fm.check_winner(gs)

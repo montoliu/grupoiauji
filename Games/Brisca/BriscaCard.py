@@ -1,3 +1,8 @@
+
+# ---------------------------------------------------------------------------
+# Card. It has a number and a type.
+# get_value() returns the value of the card since, in this game, the value is not its number
+# ---------------------------------------------------------------------------
 class BriscaCard:
     def __init__(self, card_type, card_number):
         self.card_type = card_type      # "O", "E", "C", "B"

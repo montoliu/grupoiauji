@@ -3,7 +3,8 @@ from Games.Brisca.BriscaCommon import is_better_card
 
 
 class BriscaHeuristic(Heuristic):
-    # return the points that the player is going to win in the acual round
+    # Returns the points that the player_id is going to win in the acual round.
+    # If the player is goinf to lose, then returns -points.
     def get_score(self, observation, player_id):
         if observation.playing_cards.len() == 1:
             return observation.playing_cards.get_card(0).get_value()

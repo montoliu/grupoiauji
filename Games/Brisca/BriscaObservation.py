@@ -2,6 +2,10 @@ from Core.Observation import Observation
 from Games.Brisca.BriscaAction import BriscaAction
 
 
+# -----------------------------------------------------------
+# A Game state view for a particular player
+# The non observable parts have been randomized.
+# -----------------------------------------------------------
 class BriscaObservation(Observation):
     def __init__(self, main_deck, hands, trump_card, won_cards, turn, n_players, playing_cards, winner):
         self.main_deck = main_deck.clone()
@@ -13,6 +17,7 @@ class BriscaObservation(Observation):
         self.playing_cards = playing_cards.clone()
         self.winner = winner
 
+    # Returns the actions that the player can play
     def get_list_actions(self):
         l_actions = []
         cards = self.hands[self.turn].get_cards()
@@ -21,6 +26,7 @@ class BriscaObservation(Observation):
 
         return l_actions
 
+    # Deep copy
     def clone(self):
         new_main_deck = self.main_deck.clone()
         new_hands = self.clone_list(self.hands)

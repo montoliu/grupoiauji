@@ -16,7 +16,7 @@ class BriscaGameState(GameState):
         self.won_cards = []
         self.winner = -1
 
-    # get the observable view for actual player
+    # Get the observable view for actual player
     # non observable parts are randomized
     def get_observation(self):
         l_all_cards = []
@@ -50,7 +50,7 @@ class BriscaGameState(GameState):
                                 self.won_cards, self.turn, self.n_players, self.playing_cards, self.winner)
         return obs
 
-    # empty deck, empty hands
+    # Return True if the game state is terminl, i.e. when empty deck and empty hands
     def is_terminal(self):
         return self.main_deck.empty() \
                and self.hands[0].empty() \

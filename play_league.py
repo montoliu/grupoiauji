@@ -14,6 +14,19 @@ def actualize_points(l_pts, winner, ith, jth):
         l_pts[jth] += 0.5
 
 
+def print_information(game_name, n_matches, l_players):
+    if len(l_players) == 2:
+        print("This a tournament of game " + game_name + " between players: ")
+    else:
+        print("This a tournament of game " + game_name + " among players: ")
+
+    i = 0
+    for p in l_players:
+        print(str(i) + " -> " + str(p))
+        i += 1
+    print("Number of games between two players: " + str(n_matches) + "\n")
+
+
 # ---------------------------------------------------------------------------
 # MAIN: Plays several games among several players
 # The winning player of a game gets 1 point
@@ -29,7 +42,9 @@ if __name__ == '__main__':
     game, game_state, forward_model, heuristic = select_game(game_name)
 
     # List of players of the league
-    l_players = [AlwaysFirstPlayer(), RandomPlayer()]
+    l_players = [AlwaysFirstPlayer(), RandomPlayer(), OSLAPlayer()]
+
+    print_information(game_name, n_matches, l_players)
 
     l_points = [0.0 for i in range(len(l_players))]  # 0.0 points for each player
     n_matches = int(n_matches / 2)
@@ -38,10 +53,11 @@ if __name__ == '__main__':
         p1 = l_players[i]
         for j in range(i+1, len(l_players)):
             p2 = l_players[j]
-            if game_name == "Brisca":
+            if game_name == "Brisca":        # Speciall arregment for Brisca Game
                 players = [p1, p2, p1, p2]
             else:
                 players = [p1, p2]
+
             for n in range(n_matches):
                 # player i as first
                 game.reset(game_state, 0)
@@ -54,6 +70,6 @@ if __name__ == '__main__':
                 actualize_points(l_points, game_state.winner, i, j)
 
     for i in range(len(l_players)):
-        print("Player" + str(l_players[i]) + " got " + str(l_points[i]) + " points")
+        print("Player " + str(i) + " -> " + str(l_players[i]) + " got " + str(l_points[i]) + " points")
 
 

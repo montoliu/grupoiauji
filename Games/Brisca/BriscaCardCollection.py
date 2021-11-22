@@ -1,6 +1,10 @@
 import random
 
 
+# ---------------------------------------------------------------------------
+# A list of cards
+# It can be used as Deck, hand, etc.
+# ---------------------------------------------------------------------------
 class BriscaCardCollection:
     def __init__(self):
         self.l_cards = []
@@ -34,6 +38,7 @@ class BriscaCardCollection:
     def get_card(self, ith):
         return self.l_cards[ith]
 
+    # Deep copy
     def clone(self):
         new_card_collection = BriscaCardCollection()
         new_card_collection.l_cards = []
@@ -50,7 +55,6 @@ class BriscaCardCollection:
         return True
 
     def remove(self, card):
-        # TODO check it!
         self.l_cards.remove(card)
 
     def __str__(self):

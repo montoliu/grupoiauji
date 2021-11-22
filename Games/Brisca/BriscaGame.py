@@ -4,6 +4,7 @@ from Games.Brisca.BriscaCardCollection import BriscaCardCollection
 
 
 class BriscaGame(Game):
+    # Initilize game state
     def reset(self, game_state, player_id_as_first):
         self.create_main_deck(game_state.main_deck)
         game_state.n_players = 4
