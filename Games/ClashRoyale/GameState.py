@@ -22,6 +22,7 @@ class ClashRoyaleGameState(GameState):
         self.time = time
         self.board = []
 
+    # mapa 29 x 18
         for i in range(board_width):
             fila = []
             for j in range(board_height):
