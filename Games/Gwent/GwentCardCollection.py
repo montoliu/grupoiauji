@@ -5,7 +5,7 @@ import random
 # A list of cards
 # It can be used as Deck, hand, etc.
 # ---------------------------------------------------------------------------
-class BriscaCardCollection:
+class GwentCardCollection:
     def __init__(self):
         self.l_cards = []
 
@@ -40,7 +40,7 @@ class BriscaCardCollection:
 
     # Deep copy
     def clone(self):
-        new_card_collection = BriscaCardCollection()
+        new_card_collection = GwentCardCollection()
         new_card_collection.l_cards = []
 
         for card in self.l_cards:
