@@ -36,13 +36,13 @@ if __name__ == '__main__':
     budget = 2                      # In second
     game_name = "Brisca"         # Gwent, ClashRoyale, TicTacToe
     verbose = False                 # print messages OFF
-    n_matches = 100
+    n_matches = 10
     controlling_time = False
 
     game, game_state, forward_model, heuristic = select_game(game_name)
 
     # List of players of the league
-    l_players = [AlwaysFirstPlayer(), RandomPlayer(), OSLAPlayer()]
+    l_players = [AlwaysFirstPlayer(), RandomPlayer(), RandomPlayer()]
 
     print_information(game_name, n_matches, l_players)
 

@@ -23,7 +23,7 @@ if __name__ == '__main__':
     player_id_as_first = random.choice(range(game_state.n_players))        # who starts
     game.reset(game_state, player_id_as_first)                             # Game initialization
 
-    l_players = [SlowPlayer(), AlwaysFirstPlayer()]                      # Players
+    l_players = [RandomPlayer(), AlwaysFirstPlayer()]                      # Players
 
     # Brisca is a 4 players game, then 1st player acts as player 0 and 2, and 2nd one acts as 1 and 3.
     if game_name == "Brisca":
