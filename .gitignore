@@ -4,3 +4,5 @@ Games/TicTacToe/__pycache__/*
 __pycache__/
 *.py[cod]
 *$py.class
+Games/TicTacToe/__pycache__/TicTacToeAction.cpython-38.pyc
+*.pyc
