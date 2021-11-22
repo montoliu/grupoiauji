@@ -1,9 +1,10 @@
 from Core.GameState import GameState
-
+from Games.Gwent.GameCardCollection import GwentCardCollection
 
 class GwentGameState(GameState):
 
-    def __init__(self, lives_p1, lives_p2, points_p1, points_p2, hand_p1, hand_p2, terrain_p1, terrain_p2, turn):
+    def __init__(self, players, lives_p1, lives_p2, points_p1, points_p2, hand_p1, hand_p2, terrain_p1, terrain_p2, turn):
+        self.players = 2
         self.lives_p1 = lives_p1
         self.lives_p2 = lives_p2
         self.points_p1 = points_p1
