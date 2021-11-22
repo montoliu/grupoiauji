@@ -1,5 +1,5 @@
 from Core.GameState import GameState
-from Games.Gwent.GameCardCollection import GwentCardCollection
+from Games.Gwent.Gwent_Card_Collection import GwentCardCollection
 
 class GwentGameState(GameState):
 
