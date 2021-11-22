@@ -25,4 +25,3 @@ class GwentGame(game):
             game_state.hands.append(hand)
 
         # reset board
-        
