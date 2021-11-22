@@ -1,7 +1,26 @@
+import random
+import func_timeout
+from Games.Brisca.BriscaForwardModel import BriscaForwardModel
+from Games.Brisca.BriscaGame import BriscaGame
+from Games.Brisca.BriscaGameState import BriscaGameState
+from Games.Brisca.BriscaHeuristic import BriscaHeuristic
 from Games.TicTacToe.TicTacToeGame import TicTacToeGame
 from Games.TicTacToe.TicTacToeGameState import TicTacToeGameState
 from Games.TicTacToe.TicTacToeForwardModel import TicTacToeForwardModel
 from Games.TicTacToe.TicTacToeHeuristic import TicTacToeHeuristic
+
+
+# ---------------------------------------------------------------------------
+# Plays just one match
+# ---------------------------------------------------------------------------
+def play_one_match(gs, fm, ht, l_players, budget, verbose, controlling_time):
+    while not gs.is_terminal():
+        for i in range(gs.n_players):
+            player_turn(gs, fm, ht, l_players[gs.turn], budget, verbose, controlling_time)
+            if gs.is_terminal():
+                break
+
+    fm.check_winner(gs)
 
 
 # ---------------------------------------------------------------------------
@@ -29,38 +48,62 @@ def select_game(game_name):
         gs = TicTacToeGameState()
         fm = TicTacToeForwardModel()
         ht = TicTacToeHeuristic()
-
+    elif game_name == "Brisca":
+        gm = BriscaGame()
+        gs = BriscaGameState()
+        fm = BriscaForwardModel()
+        ht = BriscaHeuristic()
     return gm, gs, fm, ht
 
 
 # ---------------------------------------------------------------------------
 # Performs a player turn
 # ---------------------------------------------------------------------------
-def player_turn(gs, fm, ht, pl, budget, vbose):
-    if vbose:
+def player_turn(gs, fm, ht, pl, budget, verbose, controlling_time):
+    if verbose:
+        print("")
         print("---------------------------------------- ")
-        print("Player " + str(gs.turn) + " [" + str(pl) + "] turn:")
+        print("Player " + str(gs.turn) + " [" + str(pl) + "] turn")
         print("---------------------------------------- ")
-        print(gs)
+        print(str(gs))
 
-    observation = gs.get_observation()
-    action = pl.think(observation, budget)
+    observation = gs.get_observation()    # Observable part of the GameState
 
-    if vbose:
+    # When controlling_time is True, the player has budget seconds to thinks.
+    # If it last more than this time, a random action is played instead.
+    # It is responsability of the Player to internally control the processinf time.
+    if controlling_time:
+        try:
+            action = func_timeout.func_timeout(budget, player_thinking, args=[pl, observation, budget])
+        except func_timeout.FunctionTimedOut:
+            if verbose:
+                print("Ups, too many time thinking. A random action is selected instead !!!")
+            action = get_random_action(observation)
+    else:
+        action = player_thinking(pl, observation, budget)
+
+    if verbose:
         print("Player " + str(gs.turn) + " selects [" + str(action) + "]")
 
     reward = fm.play(gs, action, ht)
 
-    if vbose:
+    if verbose:
         print("Reward: " + str(reward))
 
+# ---------------------------------------------------------------------------
+# The player thinkg.
+# Returns the action to be played
+# ---------------------------------------------------------------------------
+def player_thinking(pl, observation, budget):
+    return pl.think(observation, budget)
+
 
 # ---------------------------------------------------------------------------
-# Plays just one match
+# Returns a random action
 # ---------------------------------------------------------------------------
-def play_one_match(gs, fm, ht, l_players, budget, vbose):
-    while not gs.is_terminal():
-        for i in range(gs.n_players):
-            player_turn(gs, fm, ht, l_players[gs.turn], budget, vbose)
-            if gs.is_terminal():
-                break
+def get_random_action(observation):
+    l_actions = observation.get_list_actions()
+    return random.choice(l_actions)
+
+
+
