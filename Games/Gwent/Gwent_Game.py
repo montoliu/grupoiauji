@@ -2,7 +2,7 @@ from Core.Game import Game
 from Games.Gwent.Gwent_Card import Gwent_Card
 from Games.Gwent.Gwent_Card_Collection import GwentCardCollection
 
-class GwentGame(game):
+class GwentGame(Game):
 
     # initialize game state
     def reset(self, game_state, player_id_as_first):
@@ -25,3 +25,14 @@ class GwentGame(game):
             game_state.hands.append(hand)
 
         # reset board
+        game_state.terrain_p1.clear()
+        game_state.terrain_p2.clear()
+
+        # reset lives nad points
+        game_state.lives_p1 = 3
+        game_state.lives_p2 = 3
+        game_state.points_p1 = 0
+        game_state.points_p2 = 0
+
+        # who play as first
+        game_state.turn = player_id_as_first
