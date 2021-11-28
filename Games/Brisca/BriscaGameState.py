@@ -50,7 +50,7 @@ class BriscaGameState(GameState):
                                 self.won_cards, self.turn, self.n_players, self.playing_cards, self.winner)
         return obs
 
-    # Return True if the game state is terminl, i.e. when empty deck and empty hands
+    # Return True if the game state is terminal, i.e. when empty deck and empty hands
     def is_terminal(self):
         return self.main_deck.empty() \
                and self.hands[0].empty() \
