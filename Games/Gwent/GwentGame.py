@@ -1,6 +1,6 @@
 from Core.Game import Game
-from Games.Gwent.Gwent_Card import Gwent_Card
-from Games.Gwent.Gwent_Card_Collection import GwentCardCollection
+from Games.Gwent.GwentCard import GwentCard
+from Games.Gwent.GwentCardCollection import GwentCardCollection
 
 class GwentGame(Game):
 

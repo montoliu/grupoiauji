@@ -1,7 +1,8 @@
 import random
 
 from Core.GameState import GameState
-from Games.Gwent.Gwent_Card_Collection import GwentCardCollection
+from Games.Gwent.GwentCardCollection import GwentCardCollection
+
 
 class GwentGameState(GameState):
 

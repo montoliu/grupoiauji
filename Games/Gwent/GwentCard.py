@@ -1,4 +1,4 @@
-class Gwent_Card:
+class GwentCard:
     def __init__(self, card_name, level, effect):
         self.card_name = card_name
         self.level = level
@@ -14,7 +14,7 @@ class Gwent_Card:
         return self.effect
 
     def clone(self):
-        new_card = Gwent_Card(self.card_name,self.level,self.effect,self.card_type)
+        new_card = GwentCard(self.card_name, self.level, self.effect, self.card_type)
         return new_card
 
     def __str__(self):
@@ -23,17 +23,17 @@ class Gwent_Card:
     def __eq__(self,other):
         return self.card_type == other.card_type and self.level == other.level
 
-class Gwent_Melee_Card(Gwent_Card):
+class Gwent_Melee_Card(GwentCard):
     def __init__(self, card_name, level, effect, card_type = "Melee"):
         super().__init__(card_name, level, effect)
         self.card_type = card_type
 
-class Gwent_Ranged_Card(Gwent_Card):
+class Gwent_Ranged_Card(GwentCard):
     def __init__(self, card_name, level, effect, card_type = "Ranged"):
         super().__init__(card_name, level, effect)
         self.card_type = card_type
 
-class Gwent_Artillery_Card(Gwent_Card):
+class Gwent_Artillery_Card(GwentCard):
     def __init__(self, card_name, level, effect, card_type = "Artillery"):
         super().__init__(card_name, level, effect)
         self.card_type = card_type
