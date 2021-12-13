@@ -6,16 +6,16 @@ from Games.Gwent.GwentCardCollection import GwentCardCollection
 
 class GwentGameState(GameState):
 
-    def __init__(self, players, lives_p1, lives_p2, points_p1, points_p2, hands, terrain_p1, terrain_p2, turn, winner):
+    def __init__(self):
         self.players = 2
-        self.lives_p1 = lives_p1
-        self.lives_p2 = lives_p2
-        self.points_p1 = points_p1
-        self.points_p2 = points_p2
+        self.lives_p1 = 3
+        self.lives_p2 = 3
+        self.points_p1 = 0
+        self.points_p2 = 0
         self.hands = []
-        self.terrain_p1 = terrain_p1
-        self.terrain_p2 = terrain_p2
-        self.turn = turn
+        self.terrain_p1 = []
+        self.terrain_p2 = []
+        self.turn = 0
         self.winner = -1
 
     def get_observation(self):
@@ -23,12 +23,14 @@ class GwentGameState(GameState):
         list_all_cards.extend(self.main_deck.get_cards())
         for p in range(self.players):
             if p != self.turn:
-                list_all_cards.extend(self.hadns[p].get_cards())
+                list_all_cards.extend(self.hands[p].get_cards())
 
         random.shuffle(list_all_cards)
 
-        randomized_main_deck = GwentCardCollection()
-        randomized_main_deck.add_cards(list_all_cards)
+        randomized_main_deck_0 = GwentCardCollection()
+        randomized_main_deck_0.add_cards(list_all_cards)
+        randomized_main_deck_1 = GwentCardCollection()
+        randomized_main_deck_1.add_cards(list_all_cards)
         randomized_hands = []
 
         for p in range(self.players):
@@ -36,11 +38,11 @@ class GwentGameState(GameState):
             n = self.hands[p].len()
             if p != self.turn:
                 for i in range(n):
-                    card = randomized_main_deck.draw()
+                    card = randomized_main_deck_0.draw()
                     randomized_hands[p].add_card(card)
             else:
                 for i in range(n):
-                    card = self.hands[p].get_card(i)
+                    card = randomized_main_deck_1.draw()
                     randomized_hands[p].add_card(card)
 
         #Queda implementar el Gwent_Observation para poder hacer el acto de la observacion
