@@ -13,6 +13,6 @@ class ClashRoyaleForwardModel(ForwardModel):
         # Se gana si:
         # Si no se ha acabado el tiempo y la torre central del otro jugador tiene la vida a cero
         # Si se ha acabado el tiempo, el ganador es:
-        # a) El jugador que ha desturido más torres
-        # b) Si han destruido más, perderá el que tenga la torre con menos vida
+        # a) El jugador que ha destruido más torres
+        # b) Si han destruido el mismo numero de torres, perderá el que tenga la torre con menos vida
         pass
