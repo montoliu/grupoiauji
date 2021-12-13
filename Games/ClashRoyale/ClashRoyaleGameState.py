@@ -2,21 +2,21 @@ from Core.GameState import GameState
 
 
 class ClashRoyaleGameState(GameState):
-    def __init__(self, deck_p1, deck_p2, base_tower, elixir_p1, elixir_p2):
-        self.deck_p1 = deck_p1  #clase cardCollection
-        self.deck_p2 = deck_p2
+    def __init__(self):
+        self.deck_p1 = None
+        self.deck_p2 = None
 
         self.units_p1 = []  # al principio no tienen unidades en el campo
         self.units_p2 = []
 
-        self.hand_p1 = [deck_p1[0], deck_p1[1], deck_p1[2], deck_p1[3]]  # se debería hacer aleatorio el inicio
-        self.hand_p2 = [deck_p2[0], deck_p2[1], deck_p2[2], deck_p2[3]]
+        self.hand_p1 = None
+        self.hand_p2 = None
 
-        self.towers_p1 = [base_tower, base_tower, base_tower]
-        self.towers_p2 = [base_tower, base_tower, base_tower]
+        self.towers_p1 = []
+        self.towers_p2 = []
 
-        self.elixir_p1 = elixir_p1
-        self.elixir_p2 = elixir_p2
+        self.elixir_p1 = None
+        self.elixir_p2 = None
 
         self.time = 180
         self.board = []
@@ -148,13 +148,13 @@ class ClashRoyaleGameState(GameState):
 
         # mano del p1
         resultado += "Mano del P1:\n"
-        for carta in self.hand_p1:
+        for carta in self.hand_p1.get_cards():
             resultado += carta.tipo + " " + carta.coste
         resultado += "\n"
 
         # mano del p2
         resultado += "Mano del P2:\n"
-        for carta in self.hand_p2:
+        for carta in self.hand_p2.get_cards():
             resultado += carta.tipo + " " + carta.coste
         resultado += "\n"
 
