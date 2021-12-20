@@ -57,19 +57,21 @@ class GwentGameState(GameState):
                or self.lives_p2 == 0
 
     def __str__(self):
-        s = "PLAYER 1 :" + "\n"
+        s = "PLAYER 1: " + "\n"
         s += "====================" + "\n"
         s += "Lives: " + str(self.lives_p1) + "\n"
-        s += "Points :" + str(self.points_p1) + "\n"
-        s += "Hand :" + str(self.hands[0]) + "\n"
-        s += "Terrain :" + str(self.terrain_p1) + "\n"
+        s += "Points: " + str(self.points_p1) + "\n"
+        s += "Hand: " + str(self.hands[0]) + "\n"
+        s += "Terrain: " + str(self.terrain_p1) + "\n"
+        s += "Main Deck: " + str(self.randomized_main_deck_0) + "\n"
         s += "--------------------" + "\n"
-        s += "PLAYER 2 :" + "\n"
+        s += "PLAYER 2: " + "\n"
         s += "====================" + "\n"
         s += "Lives: " + str(self.lives_p2) + "\n"
         s += "Points :" + str(self.points_p2) + "\n"
-        s += "Hand :" + str(self.hands[1]) + "\n"
-        s += "Terrain :" + str(self.terrain_p2) + "\n"
+        s += "Hand: " + str(self.hands[1]) + "\n"
+        s += "Terrain: " + str(self.terrain_p2) + "\n"
+        s += "Main Deck: " + str(self.randomized_main_deck_1) + "\n"
         s += "--------------------" + "\n"
         s += "TURN :" + str(self.turn) + "\n"
         return s
