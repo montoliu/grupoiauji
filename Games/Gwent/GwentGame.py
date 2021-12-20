@@ -6,9 +6,8 @@ class GwentGame(Game):
 
     # initialize game state
     def reset(self, game_state, player_id_as_first):
-        # self.create_deck_player_1(game_state.deck_player_1)
-        # self.create_deck_player_2(game_state.deck_player_2)
-        self.create_main_deck(game_state.main_deck)
+        self.create_main_deck_0(game_state.randomized_main_deck_0)
+        self.create_main_deck_1(game_state.randomized_main_deck_1)
 
         # create empty hands
         for i in range(game_state.players):
@@ -37,3 +36,19 @@ class GwentGame(Game):
 
         # who play as first
         game_state.turn = player_id_as_first
+
+    def create_main_deck_0(self, deck):
+        l_types = ["Melee", "Ranged", "Artillery"]
+        deck.clear()
+        for card_type in l_types:
+            deck.add_card(GwentCard(card_type))
+
+        deck.shuffle()
+
+    def create_main_deck_1(self, deck):
+        l_types = ["Melee", "Ranged", "Artillery"]
+        deck.clear()
+        for card_type in l_types:
+            deck.add_card(GwentCard(card_type))
+
+        deck.shuffle()
