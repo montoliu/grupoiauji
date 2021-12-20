@@ -16,12 +16,12 @@ class GwentGame(Game):
 
         # draw three cards to player 1
         for j in range(3):
-            card = game_state.main_deck.draw()
+            card = game_state.randomized_main_deck_0.draw()
             game_state.hands.append(hands)
 
         # draw three cards to player 2
         for k in range(3):
-            card = game_state.main_deck.draw()
+            card = game_state.randomized_main_deck_1.draw()
             game_state.hands.append(hands)
 
         # reset board
@@ -41,7 +41,7 @@ class GwentGame(Game):
         l_types = ["Melee", "Ranged", "Artillery"]
         deck.clear()
         for card_type in l_types:
-            deck.add_card(GwentCard(card_type))
+            deck.add_card(GwentCard(card_type, 1, 0))
 
         deck.shuffle()
 
@@ -49,6 +49,6 @@ class GwentGame(Game):
         l_types = ["Melee", "Ranged", "Artillery"]
         deck.clear()
         for card_type in l_types:
-            deck.add_card(GwentCard(card_type))
+            deck.add_card(GwentCard(card_type, 1, 0))
 
         deck.shuffle()
