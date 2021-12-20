@@ -1,4 +1,6 @@
 from Core.GameState import GameState
+from ClashRoyaleTower import ClashRoyaleTower
+from ClashRoyaleCard import ClashRoyaleCard
 
 
 class ClashRoyaleGameState(GameState):
@@ -32,21 +34,38 @@ class ClashRoyaleGameState(GameState):
 
         self.winner = -1  # -1 no hay ganador, 1 el p1 ha ganado, 2 el p2 ha ganado
 
-    def reset_game(self):
+    def reset(self):
         self.time = 180
         self.elixir_p1 = 7
         self.elixir_p2 = 7
+
+        # tablero
         for i in range(self.board_width):
             fila = []
             for j in range(self.board_height):
                 fila.append(0)
             self.board.append(fila)
-        self.deck_p1.clear
-        self.deck_p2.clear
+
+        # mazo
+        self.deck_p1.clear()
+        self.deck_p2.clear()
+        for i in range(8):
+            self.deck_p1.append(ClashRoyaleCard())
+            self.deck_p2.append(ClashRoyaleCard())
+
+        # unidades
         self.units_p1 = []
         self.units_p2 = []
+
+        # winner
         self.winner = -1
 
+        # torres (poner torres)
+        self.towers_p1 = []
+        self.towers_p2 = []
+        for i in range(3):
+            self.towers_p1[i].append(ClashRoyaleTower())
+            self.towers_p2[i].append(ClashRoyaleTower())
 
     def is_terminal(self):
         if self.winner != -1:
@@ -70,7 +89,6 @@ class ClashRoyaleGameState(GameState):
     #    s += "player 2 hand is: " + self.hand_p2[0] + self.hand_p2[1] + self.hand_p2[2] + self.hand_p2[3] + "\n"
     #    s += "and player 2 deck is: " + self.deck_p2[0] + self.deck_p2[1] + self.deck_p2[2]\
     #         + self.deck_p2[3] + self.deck_p2[4] + self.deck_p2[5] + self.deck_p2[6] + self.deck_p2[7]
-
 
     def __str__(self):
         symbolP1Units = ["1", "2", "3", "4", "5", "6", "7", "8"]
