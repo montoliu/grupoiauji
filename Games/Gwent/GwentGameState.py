@@ -12,6 +12,8 @@ class GwentGameState(GameState):
         self.lives_p2 = 3
         self.points_p1 = 0
         self.points_p2 = 0
+        self.randomized_main_deck_0 = GwentCardCollection()
+        self.randomized_main_deck_1 = GwentCardCollection()
         self.hands = []
         self.terrain_p1 = []
         self.terrain_p2 = []
