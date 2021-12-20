@@ -63,7 +63,9 @@ class GwentGameState(GameState):
         s += "Points: " + str(self.points_p1) + "\n"
         s += "Hand: " + str(self.hands[0]) + "\n"
         s += "Terrain: " + str(self.terrain_p1) + "\n"
-        s += "Main Deck: " + str(self.randomized_main_deck_0) + "\n"
+        s += "Main Deck: \n"
+        for card in self.randomized_main_deck_0:
+            s += "  " + str(card) + "\n"
         s += "--------------------" + "\n"
         s += "PLAYER 2: " + "\n"
         s += "====================" + "\n"
@@ -71,7 +73,9 @@ class GwentGameState(GameState):
         s += "Points :" + str(self.points_p2) + "\n"
         s += "Hand: " + str(self.hands[1]) + "\n"
         s += "Terrain: " + str(self.terrain_p2) + "\n"
-        s += "Main Deck: " + str(self.randomized_main_deck_1) + "\n"
+        s += "Main Deck: \n"
+        for card in self.randomized_main_deck_1:
+            s += "  " + str(card) + "\n"
         s += "--------------------" + "\n"
         s += "TURN :" + str(self.turn) + "\n"
         return s
