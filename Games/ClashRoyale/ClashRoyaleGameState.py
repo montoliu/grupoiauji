@@ -4,15 +4,13 @@ from ClashRoyaleCard import ClashRoyaleCard
 from Games.ClashRoyale.ClahsRoyaleCardCollection import ClashRoyaleCardCollection
 from Games.ClashRoyale.ClashRoyaleBoard import ClashRoyaleBoard
 from Games.ClashRoyale.ClashRoyaleObservation import ClashRoyaleObservation
+from Games.ClashRoyale.ClashRoyaleUnit import ClashRoyaleUnit
 
 
 class ClashRoyaleGameState(GameState):
     def __init__(self):
         self.deck_p1 = ClashRoyaleCardCollection()
         self.deck_p2 = ClashRoyaleCardCollection()
-
-        self.units_p1 = []
-        self.units_p2 = []
 
         self.hand_p1 = ClashRoyaleCardCollection()
         self.hand_p2 = ClashRoyaleCardCollection()
@@ -61,6 +59,11 @@ class ClashRoyaleGameState(GameState):
             card = deck.draw()
             hand.add_card(card)
             deck.add_card(card)
+
+    def add_unit(self, card, deploy_r, deploy_c):
+        # TODO: si ya hay otra unidad en el mismo sitio hay que desplazarla
+        unit = ClashRoyaleUnit(card)
+        self.board.add_unit(unit, deploy_r, deploy_c, self.turn)
 
     def is_terminal(self):
         if self.winner != -1:

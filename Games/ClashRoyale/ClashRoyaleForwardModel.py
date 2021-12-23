@@ -3,11 +3,39 @@ from Core.ForwardModel import ForwardModel
 
 class ClashRoyaleForwardModel(ForwardModel):
     def play(self, game_state, action, heuristic):
-        # Deploy la tropa que diga la action
+        if action.is_noaction():
+            return
+
+        # Deploy new unit
+        if game_state.turn == 0:   # top player
+            if action.position == "L":
+                deploy_r = 7
+                deploy_c = 3
+            elif action.position == "M":
+                deploy_r = 4
+                deploy_c = 9
+            else:
+                deploy_r = 7
+                deploy_c = 15
+        else:                      # bottom player
+            if action.position == "L":
+                deploy_r = 22
+                deploy_c = 3
+            elif action.position == "M":
+                deploy_r = 24
+                deploy_c = 9
+            else:
+                deploy_r = 22
+                deploy_c = 15
+
+        game_state.add_unit(action.card, deploy_r, deploy_c)
+
+        # TODO: Remove card from hand and apend to deck
+
         # Mover y/o combatir las tropas en el escenario
         # Actualizar la vida de las torres y unidades
         # Actualizar el maná
-        pass
+
 
     def check_winner(self, game_state):
         # Se gana si:

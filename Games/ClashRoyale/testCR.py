@@ -22,7 +22,33 @@ if __name__ == '__main__':
     for a in l_actions:
         print(a)
 
+    # Turno jugador arriba
     # Simular que se toma una action (e.g. la primera) y ejecutar play en el FM
+    print(">> Let's play action 0: " + str(l_actions[0]) + " <<")
     forward_model.play(game_state, l_actions[0], heuristic)
+    print(game_state)
 
+    # Turno jugador abajo
+    game_state.turn = 1
+    forward_model.play(game_state, l_actions[0], heuristic)
+    print(game_state)
+
+    # Turno jugador arriba
+    game_state.turn = 0
+    forward_model.play(game_state, l_actions[1], heuristic)
+    print(game_state)
+
+    # Turno jugador abajo
+    game_state.turn = 1
+    forward_model.play(game_state, l_actions[1], heuristic)
+    print(game_state)
+
+    # Turno jugador arriba
+    game_state.turn = 0
+    forward_model.play(game_state, l_actions[2], heuristic)
+    print(game_state)
+
+    # Turno jugador abajo
+    game_state.turn = 1
+    forward_model.play(game_state, l_actions[2], heuristic)
     print(game_state)

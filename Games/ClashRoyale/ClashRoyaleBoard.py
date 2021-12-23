@@ -4,14 +4,50 @@ class ClashRoyaleBoard:
         self.board_width = board_width
         self.board = []
 
+        self.units_p1 = []
+        self.units_p2 = []
+
+        self.last_p1 = "1"
+        self.last_p2 = "a"
+
         for r in range(self.board_height):
             row = []
             for c in range(self.board_width):
-                row.append(0)
+                row.append(" ")
             self.board.append(row)
 
     def get(self, row, column):
         return self.board[column][row]
+
+    def add_unit(self, unit, r, c, player_id):
+        if player_id == 0:
+            self.board[r][c] = self.last_p1
+            self.units_p1.append(unit)
+            self.last_p1 = self.next_char_p1(self.last_p1)
+        else:
+            self.board[r][c] = self.last_p2
+            self.units_p2.append(unit)
+            self.last_p2 = self.next_char_p2(self.last_p2)
+
+    def next_char_p1(self, value):
+        if value == "1":
+            return "2"
+        if value == "2":
+            return "3"
+        if value == "3":
+            return "4"
+        if value == "4":
+            return "5"
+
+    def next_char_p2(self, value):
+        if value == "a":
+            return "b"
+        if value == "b":
+            return "c"
+        if value == "c":
+            return "d"
+        if value == "d":
+            return "e"
 
     def __str__(self):
         s = ""
@@ -23,8 +59,10 @@ class ClashRoyaleBoard:
                     s += "="
                 elif self.is_bridge(r, c):
                     s += " "
-                elif self.board[r][c] == 0:
+                elif self.board[r][c] == " ":
                     s += " "
+                else:
+                    s += self.board[r][c]
             s += "\n"
         return s
 
