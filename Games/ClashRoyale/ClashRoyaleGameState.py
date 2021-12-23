@@ -24,7 +24,7 @@ class ClashRoyaleGameState(GameState):
         self.elixir_p2 = 7
 
         self.time = 180
-        self.board = ClashRoyaleBoard(29, 18)
+        self.board = ClashRoyaleBoard(29, 19)  # rows x columns
 
         self.winner = -1  # -1 no hay ganador, 1 el p1 ha ganado, 2 el p2 ha ganado
         self.turn = 0
@@ -45,7 +45,7 @@ class ClashRoyaleGameState(GameState):
         self.towers_p1 = [ClashRoyaleTower(), ClashRoyaleTower(), ClashRoyaleTower()]
         self.towers_p2 = [ClashRoyaleTower(), ClashRoyaleTower(), ClashRoyaleTower()]
 
-        self.board = ClashRoyaleBoard(29, 18)
+        self.board = ClashRoyaleBoard(29, 19) # rows x columns
 
     # Create cards, add to deck and shuffle it
     def init_deck(self, deck):
