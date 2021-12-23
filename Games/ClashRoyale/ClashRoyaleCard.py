@@ -1,9 +1,21 @@
 class ClashRoyaleCard:
     def __init__(self):
+        self.name = "Troop"
         self.damage = 50
-        self.hitpoints = 500
+        self.hit_points = 500
         self.speed = 1
         self.hit_range = 1
+        self.cost = 3
+
+    def __str__(self):
+        s = self.name \
+            + " [" + str(self.damage) \
+            + ", " + str(self.hit_points) \
+            + ", " + str(self.speed) \
+            + ", " + str(self.hit_range) \
+            + ", " + str(self.cost) \
+            + "]"
+        return s
 
 
 #class TroopCard(Card):

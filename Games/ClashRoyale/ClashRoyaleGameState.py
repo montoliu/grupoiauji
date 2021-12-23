@@ -1,71 +1,66 @@
 from Core.GameState import GameState
 from ClashRoyaleTower import ClashRoyaleTower
 from ClashRoyaleCard import ClashRoyaleCard
+from Games.ClashRoyale.ClahsRoyaleCardCollection import ClashRoyaleCardCollection
+from Games.ClashRoyale.ClashRoyaleBoard import ClashRoyaleBoard
+from Games.ClashRoyale.ClashRoyaleObservation import ClashRoyaleObservation
 
 
 class ClashRoyaleGameState(GameState):
     def __init__(self):
-        self.deck_p1 = None
-        self.deck_p2 = None
+        self.deck_p1 = ClashRoyaleCardCollection()
+        self.deck_p2 = ClashRoyaleCardCollection()
 
-        self.units_p1 = []  # al principio no tienen unidades en el campo
-        self.units_p2 = []
-
-        self.hand_p1 = None
-        self.hand_p2 = None
-
-        self.towers_p1 = []
-        self.towers_p2 = []
-
-        self.elixir_p1 = None
-        self.elixir_p2 = None
-
-        self.time = 180
-        self.board = []
-
-    # mapa 29 x 18
-        self.board_height = 29
-        self.board_width = 18
-        for i in range(self.board_width):
-            fila = []
-            for j in range(self.board_height):
-                fila.append(0)
-            self.board.append(fila)
-
-        self.winner = -1  # -1 no hay ganador, 1 el p1 ha ganado, 2 el p2 ha ganado
-
-    def reset(self):
-        self.time = 180
-        self.elixir_p1 = 7
-        self.elixir_p2 = 7
-
-        # tablero
-        for i in range(self.board_width):
-            fila = []
-            for j in range(self.board_height):
-                fila.append(0)
-            self.board.append(fila)
-
-        # mazo
-        self.deck_p1.clear()
-        self.deck_p2.clear()
-        for i in range(8):
-            self.deck_p1.append(ClashRoyaleCard())
-            self.deck_p2.append(ClashRoyaleCard())
-
-        # unidades
         self.units_p1 = []
         self.units_p2 = []
 
-        # winner
-        self.winner = -1
+        self.hand_p1 = ClashRoyaleCardCollection()
+        self.hand_p2 = ClashRoyaleCardCollection()
 
-        # torres (poner torres)
-        self.towers_p1 = []
-        self.towers_p2 = []
-        for i in range(3):
-            self.towers_p1[i].append(ClashRoyaleTower())
-            self.towers_p2[i].append(ClashRoyaleTower())
+        self.towers_p1 = [ClashRoyaleTower(), ClashRoyaleTower(), ClashRoyaleTower()]
+        self.towers_p2 = [ClashRoyaleTower(), ClashRoyaleTower(), ClashRoyaleTower()]
+
+        self.elixir_p1 = 7
+        self.elixir_p2 = 7
+
+        self.time = 180
+        self.board = ClashRoyaleBoard(29, 18)
+
+        self.winner = -1  # -1 no hay ganador, 1 el p1 ha ganado, 2 el p2 ha ganado
+        self.turn = 0
+
+    def reset(self, player_id_as_first):
+        self.turn = player_id_as_first
+        self.winner = -1
+        self.elixir_p1 = 7
+        self.elixir_p2 = 7
+        self.time = 180
+
+        self.init_deck(self.deck_p1)
+        self.init_deck(self.deck_p2)
+
+        self.init_hand(self.deck_p1, self.hand_p1)
+        self.init_hand(self.deck_p2, self.hand_p2)
+
+        self.towers_p1 = [ClashRoyaleTower(), ClashRoyaleTower(), ClashRoyaleTower()]
+        self.towers_p2 = [ClashRoyaleTower(), ClashRoyaleTower(), ClashRoyaleTower()]
+
+        self.board = ClashRoyaleBoard(29, 18)
+
+    # Create cards, add to deck and shuffle it
+    def init_deck(self, deck):
+        deck.clear()
+        for i in range(8):
+            deck.add_card(ClashRoyaleCard())
+        deck.shuffle()
+
+    # Repeat 4 times: draw a card from the deck, add to the hand and append again (at the end) to the deck
+    def init_hand(self, deck, hand):
+        hand.clear()
+        for i in range(4):
+            card = deck.draw()
+            hand.add_card(card)
+            deck.add_card(card)
 
     def is_terminal(self):
         if self.winner != -1:
@@ -74,25 +69,40 @@ class ClashRoyaleGameState(GameState):
             return False
 
     def get_observation(self):
-        obs = ClashRoyaleObservation(self.deck_p1, self.elixir_p1, self.winner)
+        # TODO: hay que completarlo
+        obs = ClashRoyaleObservation(self.turn, self.hand_p1, self.hand_p1, self.elixir_p1, self.elixir_p2)
         return obs
 
-    #def __str__(self):
-    #    s = "player 1 towers are: " + self.towers_p1[0] + " " + self.towers_p1[1] + " " + self.towers_p1[2] + "\n"
-    #    s += "player 1 elixir is: " + "\n"
-    #    s += "player 1 hand is: " + self.hand_p1[0] + self.hand_p1[1] + self.hand_p1[2] + self.hand_p1[3] + "\n"
-    #    s += "and player 1 deck is: " + self.deck_p1[0] + self.deck_p1[1] + self.deck_p1[2] + \
-    #         self.deck_p1[3] + self.deck_p1[4] + self.deck_p1[5] + self.deck_p1[6] + self.deck_p1[7] + "\n\n"
-
-    #    s += "player 2 towers are: " + self.towers_p2[0] + " " + self.towers_p2[1] + " " + self.towers_p2[2] + "\n"
-    #    s += "player 2 elixir is: " + "\n"
-    #    s += "player 2 hand is: " + self.hand_p2[0] + self.hand_p2[1] + self.hand_p2[2] + self.hand_p2[3] + "\n"
-    #    s += "and player 2 deck is: " + self.deck_p2[0] + self.deck_p2[1] + self.deck_p2[2]\
-    #         + self.deck_p2[3] + self.deck_p2[4] + self.deck_p2[5] + self.deck_p2[6] + self.deck_p2[7]
-
     def __str__(self):
-        symbolP1Units = ["1", "2", "3", "4", "5", "6", "7", "8"]
+        s = "Turn: " + str(self.turn) + "\n"
+        s += "Time: " + str(self.time) + "\n"
+        s += "Board:" + "\n"
+        s += str(self.board) + "\n"
 
+        s += "Player 1 hand:   "
+        s += str(self.hand_p1) + "\n"
+        s += "Player 2 hand:   "
+        s += str(self.hand_p2) + "\n"
+
+        s += "Player 1 deck:   "
+        s += str(self.deck_p1) + "\n"
+        s += "Player 2 deck:   "
+        s += str(self.deck_p2) + "\n"
+
+        s += "Player 1 towers: "
+        for t in self.towers_p1:
+            s += str(t) + " "
+        s += "\n"
+        s += "Player 2 towers :"
+        for t in self.towers_p2:
+            s += str(t) + " "
+        s += "\n"
+
+        return s
+
+
+'''
+        symbolP1Units = ["1", "2", "3", "4", "5", "6", "7", "8"]
         symbolP2Units = ["A", "B", "C", "D", "E", "F", "G", "H"]
 
         symbolTorre = "*"
@@ -145,23 +155,23 @@ class ClashRoyaleGameState(GameState):
         # torres del p1
         resultado += "T1 "
         for torre in self.towers_p1:
-            resultado += str(torre.vida) + " "
+            resultado += str(torre.health) + " "
         resultado += "\n"
 
         # torres del p2
         resultado += "T2 "
         for torre in self.towers_p2:
-            resultado += str(torre.vida) + " "
+            resultado += str(torre.health) + " "
         resultado += "\n"
 
         # unidades del p1
         for i in range(len(self.units_p1)):
-            resultado += symbolP1Units[i] + str(self.units_p1[i].vida) + "\n"
+            resultado += symbolP1Units[i] + str(self.units_p1[i].health) + "\n"
         resultado += "\n"
 
         # unidades del p2
         for i in range(len(self.units_p2)):
-            resultado += symbolP2Units[i] + str(self.units_p2[i].vida) + "\n"
+            resultado += symbolP2Units[i] + str(self.units_p2[i].health) + "\n"
         resultado += "\n"
 
         # mano del p1
@@ -191,3 +201,4 @@ class ClashRoyaleGameState(GameState):
         # elixir de ambos
         resultado += "Elixir del P1: " + str(self.elixir_p1) + "\n"
         resultado += "Elixir del P2: " + str(self.elixir_p2) + "\n"
+'''

@@ -7,4 +7,8 @@ class ClashRoyaleAction(Action):
         self.card_pos = card_pos
 
     def __str__(self):
-        return "" + str(self.card) + " " + str(self.card_pos)
+        if self.card is None:
+            s = "No action"
+        else:
+            s = "{" + str(self.card) + ", " + str(self.card_pos) + "}"
+        return s
