@@ -4,46 +4,39 @@ from ClashRoyaleCard import ClashRoyaleCard
 from Games.ClashRoyale.ClahsRoyaleCardCollection import ClashRoyaleCardCollection
 from Games.ClashRoyale.ClashRoyaleBoard import ClashRoyaleBoard
 from Games.ClashRoyale.ClashRoyaleObservation import ClashRoyaleObservation
-from Games.ClashRoyale.ClashRoyaleUnit import ClashRoyaleUnit
 
 
 class ClashRoyaleGameState(GameState):
     def __init__(self):
-        self.deck_p1 = ClashRoyaleCardCollection()
-        self.deck_p2 = ClashRoyaleCardCollection()
+        self.decks = [ClashRoyaleCardCollection(), ClashRoyaleCardCollection()]
+        self.hands = [ClashRoyaleCardCollection(), ClashRoyaleCardCollection()]
+        self.towers = [[ClashRoyaleTower(), ClashRoyaleTower(), ClashRoyaleTower()],
+                       [ClashRoyaleTower(), ClashRoyaleTower(), ClashRoyaleTower()]]
 
-        self.hand_p1 = ClashRoyaleCardCollection()
-        self.hand_p2 = ClashRoyaleCardCollection()
-
-        self.towers_p1 = [ClashRoyaleTower(), ClashRoyaleTower(), ClashRoyaleTower()]
-        self.towers_p2 = [ClashRoyaleTower(), ClashRoyaleTower(), ClashRoyaleTower()]
-
-        self.elixir_p1 = 7
-        self.elixir_p2 = 7
+        self.elixir = [7, 7]
 
         self.time = 180
         self.board = ClashRoyaleBoard(29, 19)  # rows x columns
 
-        self.winner = -1  # -1 no hay ganador, 1 el p1 ha ganado, 2 el p2 ha ganado
+        self.winner = -1  # -1 no winner yet
         self.turn = 0
 
     def reset(self, player_id_as_first):
         self.turn = player_id_as_first
         self.winner = -1
-        self.elixir_p1 = 7
-        self.elixir_p2 = 7
         self.time = 180
+        self.elixir = [7, 7]
 
-        self.init_deck(self.deck_p1)
-        self.init_deck(self.deck_p2)
+        self.init_deck(self.decks[0])
+        self.init_deck(self.decks[1])
 
-        self.init_hand(self.deck_p1, self.hand_p1)
-        self.init_hand(self.deck_p2, self.hand_p2)
+        self.init_hand(self.decks[0], self.hands[0])
+        self.init_hand(self.decks[1], self.hands[1])
 
-        self.towers_p1 = [ClashRoyaleTower(), ClashRoyaleTower(), ClashRoyaleTower()]
-        self.towers_p2 = [ClashRoyaleTower(), ClashRoyaleTower(), ClashRoyaleTower()]
+        self.towers = [[ClashRoyaleTower(), ClashRoyaleTower(), ClashRoyaleTower()],
+                       [ClashRoyaleTower(), ClashRoyaleTower(), ClashRoyaleTower()]]
 
-        self.board = ClashRoyaleBoard(29, 19) # rows x columns
+        self.board = ClashRoyaleBoard(29, 19)  # rows x columns
 
     # Create cards, add to deck and shuffle it
     def init_deck(self, deck):
@@ -62,8 +55,7 @@ class ClashRoyaleGameState(GameState):
 
     def add_unit(self, card, deploy_r, deploy_c):
         # TODO: si ya hay otra unidad en el mismo sitio hay que desplazarla
-        unit = ClashRoyaleUnit(card)
-        self.board.add_unit(unit, deploy_r, deploy_c, self.turn)
+        self.board.add_unit(card, deploy_r, deploy_c, self.turn)
 
     def is_terminal(self):
         if self.winner != -1:
@@ -73,31 +65,36 @@ class ClashRoyaleGameState(GameState):
 
     def get_observation(self):
         # TODO: hay que completarlo
-        obs = ClashRoyaleObservation(self.turn, self.hand_p1, self.hand_p1, self.elixir_p1, self.elixir_p2)
+        obs = ClashRoyaleObservation(self.turn, self.hands, self.elixir)
         return obs
 
     def __str__(self):
         s = "Turn: " + str(self.turn) + "\n"
         s += "Time: " + str(self.time) + "\n"
+        s += "Elixir: " + str(self.elixir[0]) + " " + str(self.elixir[1]) + "\n"
+
         s += "Board:" + "\n"
         s += str(self.board) + "\n"
 
+        s += "Units:" + "\n"
+        s += self.board.str_units()
+
         s += "Player 1 hand:   "
-        s += str(self.hand_p1) + "\n"
+        s += str(self.hands[0]) + "\n"
         s += "Player 2 hand:   "
-        s += str(self.hand_p2) + "\n"
+        s += str(self.hands[1]) + "\n"
 
         s += "Player 1 deck:   "
-        s += str(self.deck_p1) + "\n"
+        s += str(self.decks[0]) + "\n"
         s += "Player 2 deck:   "
-        s += str(self.deck_p2) + "\n"
+        s += str(self.decks[1]) + "\n"
 
         s += "Player 1 towers: "
-        for t in self.towers_p1:
+        for t in self.towers[0]:
             s += str(t) + " "
         s += "\n"
         s += "Player 2 towers :"
-        for t in self.towers_p2:
+        for t in self.towers[1]:
             s += str(t) + " "
         s += "\n"
 

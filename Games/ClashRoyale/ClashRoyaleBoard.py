@@ -1,57 +1,46 @@
+from Games.ClashRoyale.ClashRoyaleUnit import ClashRoyaleUnit
+
+
 class ClashRoyaleBoard:
     def __init__(self, board_height, board_width):
         self.board_height = board_height
         self.board_width = board_width
-        self.board = []
+        self.board = []  # each cell of the boar is of type ClashRoyaleUnit
 
-        self.units_p1 = []
-        self.units_p2 = []
-
-        self.last_p1 = "1"
-        self.last_p2 = "a"
+        self.units = []  # Store a reference to the units included in the board.
+        self.last_unit_id = 0
 
         for r in range(self.board_height):
             row = []
             for c in range(self.board_width):
-                row.append(" ")
+                row.append(ClashRoyaleUnit())   # empty unit
             self.board.append(row)
 
-    def get(self, row, column):
+    def get_cell(self, row, column):
         return self.board[column][row]
 
-    def add_unit(self, unit, r, c, player_id):
-        if player_id == 0:
-            self.board[r][c] = self.last_p1
-            self.units_p1.append(unit)
-            self.last_p1 = self.next_char_p1(self.last_p1)
-        else:
-            self.board[r][c] = self.last_p2
-            self.units_p2.append(unit)
-            self.last_p2 = self.next_char_p2(self.last_p2)
+    # Add unit to the board (and units list)
+    def add_unit(self, card, r, c, player_id):
+        self.board[r][c].assign(self.last_unit_id, player_id, card)
+        self.units.append(self.board[r][c])
+        self.last_unit_id += 1
 
-    def next_char_p1(self, value):
-        if value == "1":
-            return "2"
-        if value == "2":
-            return "3"
-        if value == "3":
-            return "4"
-        if value == "4":
-            return "5"
+    # for printing units information
+    def str_units(self):
+        s = ""
+        for u in self.units:
+            if u.player_id == 0:
+                str_id = chr(97 + u.unit_id)  # lowercase
+            else:
+                str_id = chr(65 + u.unit_id)  # capital
 
-    def next_char_p2(self, value):
-        if value == "a":
-            return "b"
-        if value == "b":
-            return "c"
-        if value == "c":
-            return "d"
-        if value == "d":
-            return "e"
+            s += str_id + " -> " + str(u) + "\n"
+        return s
 
     def __str__(self):
-        s = ""
+        s = "--------------------- \n"
         for r in range(self.board_height):
+            s += "|"
             for c in range(self.board_width):
                 if self.is_tower(r, c):
                     s += "*"
@@ -59,11 +48,20 @@ class ClashRoyaleBoard:
                     s += "="
                 elif self.is_bridge(r, c):
                     s += " "
-                elif self.board[r][c] == " ":
+                elif self.board[r][c].is_empty():   # a cell without an unit inside
                     s += " "
                 else:
-                    s += self.board[r][c]
-            s += "\n"
+                    s += self.print_cell(r, c)     # a cell with an unit inside
+            s += "|\n"
+        s += "---------------------"
+        return s
+
+    def print_cell(self, r, c):
+        s = ""
+        if self.board[r][c].player_id == 0:
+            s += chr(97 + self.board[r][c].unit_id)  # player 0: lowercase
+        else:
+            s += chr(65 + self.board[r][c].unit_id)  # player 1: capital
         return s
 
     def is_tower(self, r, c):
