@@ -1,35 +1,39 @@
 # Basado en:
 # https://www.kaggle.com/code/reukki/pytorch-cnn-tutorial-with-cats-and-dogs/notebook
 import random
+
+import pandas as pd
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import torch.nn.functional as F
 from torchvision import transforms
 from torch.utils.data import DataLoader
-import pandas as pd
 import matplotlib.pyplot as plt
 import os
 import glob
 from sklearn.model_selection import train_test_split
-from LearnDL.MyCNN import MyCnn
-from LearnDL.MyDataset import MyDataset
+from MyCNN import MyCnn
+from MyDataset import MyDataset
 from PIL import Image
 
 
 # ------------------------------------------------------
 # codigo para entrenar la NN
 # ------------------------------------------------------
+# El proceso de entrenamiento se repite epochs veces
+# En cada iteración se selecciona un subconunto (batch) en vez de entrenar con todas
+# Así se evita el sobre entrenamiento (overfitting)
 def train(epochs, train_loader, val_loader, model, optimizer, criterion):
     for epoch in range(epochs):
         epoch_loss = 0
         epoch_accuracy = 0
 
-        for data, label in train_loader:  # se obtienen un batch de entre todas las muestras de entrenamiento
-            data = data.to(device)      # batch_size muestras de las que hay en el conjunto de entrenamiento
-            label = label.to(device)    # Sus labels
+        for data, label in train_loader:  # Se obtienen un batch de entre todas las muestras de entrenamiento
+            data = data.to(device)        # batch_size muestras de las que hay en el conjunto de entrenamiento
+            label = label.float().to(device)    # Sus labels
 
-            output = model(data)            # estimacion para los datos
+            output = model(data)       # estimacion para los datos
+            output = output.view(output.shape[0])
             loss = criterion(output, label)
 
             # con estas tres lineas se le dice al modelo que mejore para el futuro
@@ -37,15 +41,13 @@ def train(epochs, train_loader, val_loader, model, optimizer, criterion):
             loss.backward()
             optimizer.step()
 
-            acc = ((output.argmax(dim=1) == label).float().mean())  # exactitud de las muestras de train en el batch
+            acc = sum(torch.round(output) == label) / label.shape[0]
             epoch_accuracy += acc / len(train_loader)
             epoch_loss += loss / len(train_loader)
 
-        print('Epoch : {}, train accuracy : {}, train loss : {}'.format(epoch + 1, epoch_accuracy, epoch_loss))
-
         # idem con las muestras de validación.
         # Aquí no mejoramos el modelo con esas muestras. Solo nos dirve para comprobar como va
-        with torch.no_grad():
+        with torch.no_grad():  # para que no guarde los gradientes ya que no los vamos a usar
             epoch_val_accuracy = 0
             epoch_val_loss = 0
             for data, label in val_loader:
@@ -53,17 +55,23 @@ def train(epochs, train_loader, val_loader, model, optimizer, criterion):
                 label = label.to(device)
 
                 val_output = model(data)
+                val_output = val_output.view(val_output.shape[0])
                 val_loss = criterion(val_output, label)
 
-                acc = ((val_output.argmax(dim=1) == label).float().mean())
+                acc = sum(torch.round(val_output) == label) / label.shape[0]
+                # acc = ((val_output.argmax(dim=1) == label).float().mean())
                 epoch_val_accuracy += acc / len(val_loader)
                 epoch_val_loss += val_loss / len(val_loader)
 
-            print('Epoch : {}, val_accuracy   : {}, val_loss   : {}'.format(epoch + 1, epoch_val_accuracy, epoch_val_loss))
+            print("Epoch:" + str(epoch+1) + " Train_acc: {0:0.2f}".format(epoch_accuracy) +
+                  " train_loss: {0:0.2f}".format(epoch_loss) +
+                  " Val_acc: {0:0.2f}".format(epoch_val_accuracy) +
+                  " Val_loss: {0:0.2f}".format(epoch_val_accuracy))
 
 
 # ------------------------------------------------------
 # Predecir la etiqueta de las imagenes de test
+# Se prefice la probabilidad de que la imagen sea un perro
 # ------------------------------------------------------
 def test(test_loader, model):
     dog_probs = []
@@ -71,36 +79,12 @@ def test(test_loader, model):
     with torch.no_grad():
         for data, fileid in test_loader:
             data = data.to(device)
-            preds = model(data)      # predicciones
-            preds_list = F.softmax(preds, dim=1)[:, 1].tolist()    # obtiene la prob de ser perro
-            dog_probs += list(zip(list(fileid), preds_list))
+            preds = model(data)
+            id_image = int(fileid[0])
+            prob_image = preds.cpu().numpy()[0, 0]
+            dog_probs.append([id_image, prob_image])
 
     return dog_probs
-
-
-# ------------------------------------------------------
-# Mostrar algunos resultados en una figura
-# ------------------------------------------------------
-def mostrar_resultados(submission, test_dir):
-    class_ = {0: 'cat', 1: 'dog'}
-    fig, axes = plt.subplots(2, 5, figsize=(20, 12), facecolor='w')
-
-    for ax in axes.ravel():
-        i = random.choice(submission['id'].values)
-
-        label = submission.loc[submission['id'] == i, 'label'].values[0]
-        if label > 0.5:
-            label = 1
-        else:
-            label = 0
-
-        img_path = os.path.join(test_dir, '{}.jpg'.format(i))
-        img = Image.open(img_path)
-
-        ax.set_title(class_[label])
-        ax.imshow(img)
-
-    plt.show()
 
 
 # ---------------------------------------------------------
@@ -110,7 +94,7 @@ if __name__ == '__main__':
     # hyperparametros
     lr = 0.001        # learning_rate
     batch_size = 100  # we will use mini-batch method
-    epochs = 50       # How much to train a model
+    epochs = 10       # How much to train a model
     print("Learning rate: " + str(lr))
     print("Batch size   : " + str(batch_size))
     print("Epochs       : " + str(epochs))
@@ -140,6 +124,7 @@ if __name__ == '__main__':
         transforms.ToTensor(),
         ])
 
+    # Pytorch datasets
     train_data = MyDataset(train_list, transform=my_transforms)
     val_data = MyDataset(val_list, transform=my_transforms)
     test_data = MyDataset(test_list, transform=my_transforms)
@@ -150,9 +135,9 @@ if __name__ == '__main__':
 
     # crear la NN
     model = MyCnn().to(device)
-    model.train()
-    optimizer = optim.Adam(params=model.parameters(), lr=0.001)
-    criterion = nn.CrossEntropyLoss()
+    model.train()                                              # Indicamos que vamos a entrenar el modelo
+    optimizer = optim.Adam(params=model.parameters(), lr=lr)   # Una forma de actualizar los parametros
+    criterion = nn.MSELoss()                                   # Para comparar lo que da con lo que es
 
     # Entrenamiento
     train(epochs, train_loader, val_loader, model, optimizer, criterion)
@@ -162,12 +147,23 @@ if __name__ == '__main__':
     dog_probs.sort(key=lambda x: int(x[0]))
     print(dog_probs)
 
-    # crear submision para el concurso de kaggle
-    idx = list(map(lambda x: x[0], dog_probs))
-    prob = list(map(lambda x: x[1], dog_probs))
-    submission = pd.DataFrame({'id': idx, 'label': prob})
-    submission.to_csv('result.csv', index=False)
+    true_labels = pd.read_csv("./data/true_labels.csv", header=None)
+    true_labels = true_labels.values
+    acc = 0
+    for i in range(len(dog_probs)):
+        if dog_probs[i][1] >= 0.5:
+            est_label = 1
+        else:
+            est_label = 0
 
-    # ver algunos resultados
-    mostrar_resultados(submission, test_dir)
+        true_label = true_labels[i][0]
+
+        if est_label == true_label:
+            acc += 1
+        else:
+            print(str(i+1) + " -> Estimated: " + str(est_label) + " but it is: " + str(true_label))
+
+    print("Accuracy on test set: " + str(acc/len(dog_probs)))
+
+
 

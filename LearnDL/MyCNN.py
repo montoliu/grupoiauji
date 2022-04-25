@@ -30,15 +30,15 @@ class MyCnn(nn.Module):
         )
 
         self.fc1 = nn.Linear(3 * 3 * 64, 10)
-        self.dropout = nn.Dropout(0.5)
-        self.fc2 = nn.Linear(10, 2)
         self.relu = nn.ReLU()
+        self.fc2 = nn.Linear(10, 1)
+        self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
         out = self.layer1(x)
         out = self.layer2(out)
         out = self.layer3(out)
-        out = out.view(out.size(0), -1)
+        out = out.view(out.size(0), -1)    # Crea el tensor final 1D
         out = self.relu(self.fc1(out))
-        out = self.fc2(out)
+        out = self.sigmoid(self.fc2(out))
         return out

@@ -20,9 +20,10 @@ class MyDataset(torch.utils.data.Dataset):
         img_transformed = self.transform(img)
 
         label = img_path.split('\\')[-1].split('.')[0]
+        # label = img_path.split('/')[-1].split('.')[0]  # linux
         if label == 'dog':
-            label = 1
+            label = 1.0
         elif label == 'cat':
-            label = 0
+            label = 0.0
 
         return img_transformed, label
