@@ -66,7 +66,7 @@ def train(epochs, train_loader, val_loader, model, optimizer, criterion):
             print("Epoch:" + str(epoch+1) + " Train_acc: {0:0.2f}".format(epoch_accuracy) +
                   " train_loss: {0:0.2f}".format(epoch_loss) +
                   " Val_acc: {0:0.2f}".format(epoch_val_accuracy) +
-                  " Val_loss: {0:0.2f}".format(epoch_val_accuracy))
+                  " Val_loss: {0:0.2f}".format(epoch_val_loss))
 
 
 # ------------------------------------------------------
